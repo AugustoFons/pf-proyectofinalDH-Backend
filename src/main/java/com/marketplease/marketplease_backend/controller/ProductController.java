@@ -1,7 +1,7 @@
 package com.marketplease.marketplease_backend.controller;
 
 import com.marketplease.marketplease_backend.domain.Product;
-import com.marketplease.marketplease_backend.dto.ProductDtos;
+import com.marketplease.marketplease_backend.dto.ProductDtos.*;
 import com.marketplease.marketplease_backend.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -17,33 +17,41 @@ public class ProductController {
 
     // Listar paginados
     @GetMapping
-    public Page<ProductDtos.ProductRes> list(@RequestParam(defaultValue = "0") int page,
+    public Page<ProductRes> list(@RequestParam(defaultValue = "0") int page,
                                              @RequestParam(defaultValue = "10") int size){
         return productService.list(page, size);
     }
 
     // Listar detalle
     @GetMapping("/{id}")
-    public Product getById(@PathVariable Long id) {
-        return null;
+    public ProductRes getById(@PathVariable Long id) {
+        return productService.getById(id);
     }
 
     // Crear
     @PostMapping
-    public Product create(@RequestBody Product product) {
-        return null;
+    public ProductRes create(@RequestBody ProductCreateReq product) {
+        return productService.create(product);
     }
 
     // Actualizar
     @PutMapping("/{id}")
-    public Product update(@PathVariable Long id, @RequestBody Product product) {
-        return null;
+    public ProductRes update(@PathVariable Long id, @RequestBody ProductUpdateReq product) {
+        return productService.update(id, product);
     }
 
     // Borrar
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
+        productService.delete(id);
     }
 
+    @GetMapping("/search")
+    public Page<ProductRes> search(@RequestParam(defaultValue = "0") int page,
+                                   @RequestParam(defaultValue = "10") int size,
+                                   @RequestParam(required = false) String query,
+                                   @RequestParam(required = false) Long categoryId) {
+        return productService.search(page, size, query, categoryId);
+    }
 
 }
