@@ -1,5 +1,6 @@
 package com.marketplease.marketplease_backend.domain;
 
+import com.marketplease.marketplease_backend.enums.ProductType;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -20,6 +21,10 @@ public class Product {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "product_type", nullable = false )
+    private ProductType productType = ProductType.VENTA;
 
     private BigDecimal price;
 
@@ -79,6 +84,15 @@ public class Product {
 
     public void setCategories(Set<Category> categories) {
         this.categories = categories;
+    }
+
+
+    public ProductType getProductType() {
+        return productType;
+    }
+
+    public void setProductType(ProductType productType) {
+        this.productType = productType;
     }
 }
 

@@ -4,6 +4,7 @@ import com.marketplease.marketplease_backend.domain.Category;
 import com.marketplease.marketplease_backend.domain.Product;
 import com.marketplease.marketplease_backend.domain.ProductImage;
 import com.marketplease.marketplease_backend.dto.ProductDtos.*;
+import com.marketplease.marketplease_backend.enums.ProductType;
 import com.marketplease.marketplease_backend.repositories.CategoryRepository;
 import com.marketplease.marketplease_backend.repositories.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -40,7 +41,15 @@ public class ProductService {
 
     public ProductRes create(ProductCreateReq product) {
         var p = new Product();
-        applyFields(p, product.name(), product.description(), product.price(), product.imageUrls(), product.categoryIds());
+        applyFields(
+                p,
+                product.name(),
+                product.description(),
+                product.price(),
+                product.productType(),
+                product.imageUrls(),
+                product.categoryIds()
+        );
         var saved = productRepository.save(p);
         return toRes(saved);
     }
@@ -53,7 +62,15 @@ public class ProductService {
         p.getImages().clear();
         p.getCategories().clear();
 
-        applyFields(p, product.name(), product.description(), product.price(), product.imageUrls(), product.categoryIds());
+        applyFields(
+                p,
+                product.name(),
+                product.description(),
+                product.price(),
+                product.productType(),
+                product.imageUrls(),
+                product.categoryIds()
+        );
         var saved = productRepository.save(p);
         return toRes(saved);
     }
@@ -72,14 +89,23 @@ public class ProductService {
     private ProductRes toRes(Product p) {
         var imgs = p.getImages().stream().map(ProductImage::getUrl).toList();
         var cats = p.getCategories().stream().map(Category::getId).toList();
-        return new ProductRes(p.getId(), p.getName(), p.getDescription(), p.getPrice(), imgs, cats);
+        return new ProductRes(
+                p.getId(),
+                p.getName(),
+                p.getDescription(),
+                p.getPrice(),
+                p.getProductType(),
+                imgs,
+                cats
+        );
     }
 
     private void applyFields(Product p, String name, String description,
-                             java.math.BigDecimal price, List<String> imageUrls, List<Long> categoryIds) {
+                             java.math.BigDecimal price, ProductType productType, List<String> imageUrls, List<Long> categoryIds) {
         p.setName(name);
         p.setDescription(description);
         p.setPrice(price);
+        p.setProductType(productType);
 
         if (imageUrls != null) {
             int pos = 0;

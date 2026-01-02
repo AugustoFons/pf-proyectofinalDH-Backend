@@ -4,7 +4,11 @@ import com.marketplease.marketplease_backend.domain.Product;
 import com.marketplease.marketplease_backend.dto.ProductDtos.*;
 import com.marketplease.marketplease_backend.service.ProductService;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -42,8 +46,10 @@ public class ProductController {
 
     // Borrar
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> delete(@PathVariable Long id) {
         productService.delete(id);
+        // Devuelve un estado 200 con un JSON
+        return ResponseEntity.ok(Collections.singletonMap("mensaje", "Producto eliminado correctamente"));
     }
 
     @GetMapping("/search")
