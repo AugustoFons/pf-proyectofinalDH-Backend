@@ -23,4 +23,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     AND (:categoryId IS NULL OR c.id = :categoryId)
     """)
     Page<Product> search(@Param("q") String q, @Param("categoryId") Long categoryId, Pageable pageable);
+
+    boolean existsByNameIgnoreCase(String name);
+
 }

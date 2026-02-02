@@ -40,6 +40,9 @@ public class ProductService {
     }
 
     public ProductRes create(ProductCreateReq product) {
+        if (productRepository.existsByNameIgnoreCase(product.name())) {
+            throw new IllegalArgumentException("El nombre ya existe: " + product.name());
+        }
         var p = new Product();
         applyFields(
                 p,
