@@ -35,7 +35,8 @@ GRANT ALL PRIVILEGES ON marketplease.* TO 'mp'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
-Configuración
+## Configuración:
+
 Editar el archivo src/main/resources/application.properties con las credenciales locales de MySQL:
 
 spring.datasource.url
@@ -46,13 +47,19 @@ spring.datasource.password
 
 Nota: el esquema de tablas se genera y actualiza automáticamente al iniciar la aplicación por primera vez mediante Hibernate (spring.jpa.hibernate.ddl-auto=update). El archivo src/main/resources/data.sql incializa datos para la tabla de categorias de productos. Y opcionalmente se deja disponible el archivo src/main/resources/data/dataproducts.sql con los inserts de productos e imagenes si se quiere llenar la db de datos manualmente luego de la inicialización.
 
-Ejecución
+## Ejecución
 mvn spring-boot:run
-API
+
+## API
 http://localhost:8080
 
-Repositorio Frontend
-https://github.com/AugustoFons/pf-proyectofinalDH-Front
+Repositorio Frontend: https://github.com/AugustoFons/pf-proyectofinalDH-Front
+
+---
+
+A continuación se deja el enlace a un breve video donde se muestra como se inicializan las tablas por primera vez, la inserción de datos y una vista general de las pantallas. Es necesario previamente haber realizado los pasos previos de instalación mencionados en cada repositorio.
+
+https://drive.google.com/file/d/1kD3_EGqhuRWitlL_h6k0wXQv9cJ-cd5t/view?usp=sharing
 
 ---
 
