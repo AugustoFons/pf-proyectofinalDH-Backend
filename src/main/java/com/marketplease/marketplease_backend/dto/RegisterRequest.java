@@ -5,20 +5,21 @@ import jakarta.validation.constraints.Size;
 
 public class RegisterRequest {
 
-    @NotBlank
-    @Size(min = 2)
+    @NotBlank(message = "El nombre es obligatorio")
+    @Size(min = 2, max = 60, message = "El nombre debe tener entre 2 y 60 caracteres")
     private String firstName;
 
-    @NotBlank
-    @Size(min = 2)
+    @NotBlank(message = "El apellido es obligatorio")
+    @Size(min = 2, max = 60, message = "El apellido debe tener entre 2 y 60 caracteres")
     private String lastName;
 
-    @NotBlank
-    @Email
+    @NotBlank(message = "El email es obligatorio")
+    @Email(message = "El email no tiene un formato valido")
+    @Size(max = 120, message = "El email no puede superar los 120 caracteres")
     private String email;
 
-    @NotBlank
-    @Size(min = 6)
+    @NotBlank(message = "La contrasena es obligatoria")
+    @Size(min = 6, max = 80, message = "La contrasena debe tener entre 6 y 80 caracteres")
     private String password;
 
     public RegisterRequest() {}

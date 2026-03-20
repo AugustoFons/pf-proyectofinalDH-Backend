@@ -1,9 +1,13 @@
 package com.marketplease.marketplease_backend.controller;
+import com.marketplease.marketplease_backend.dto.AuthResponse;
+import com.marketplease.marketplease_backend.dto.AuthUserResponse;
 import com.marketplease.marketplease_backend.dto.LoginRequest;
 import com.marketplease.marketplease_backend.dto.RegisterRequest;
 import com.marketplease.marketplease_backend.service.AuthService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,16 +21,20 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request) {
-
-        authService.register(request);
-
-        return ResponseEntity.ok("Usuario registrado correctamente");
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
+        AuthResponse response = authService.register(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest request) {
-        String token = authService.login(request);
-        return ResponseEntity.ok(token);
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+        AuthResponse response = authService.login(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<AuthUserResponse> me(Authentication authentication) {
+        AuthUserResponse response = authService.getCurrentUser(authentication.getName());
+        return ResponseEntity.ok(response);
     }
 }

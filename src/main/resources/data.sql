@@ -1,5 +1,11 @@
 -- Seed: categorías base (idempotente)
 
+INSERT INTO roles (name) VALUES ('ROLE_USER')
+    ON DUPLICATE KEY UPDATE name = VALUES(name);
+
+INSERT INTO roles (name) VALUES ('ROLE_ADMIN')
+    ON DUPLICATE KEY UPDATE name = VALUES(name);
+
 INSERT INTO categories (name) VALUES ('Vehículos')
     ON DUPLICATE KEY UPDATE name = VALUES(name);
 
