@@ -3,6 +3,7 @@ import com.marketplease.marketplease_backend.domain.Role;
 import com.marketplease.marketplease_backend.domain.User;
 import com.marketplease.marketplease_backend.dto.AuthResponse;
 import com.marketplease.marketplease_backend.dto.AuthUserResponse;
+import com.marketplease.marketplease_backend.dto.ChangePasswordRequest;
 import com.marketplease.marketplease_backend.dto.LoginRequest;
 import com.marketplease.marketplease_backend.dto.RegisterRequest;
 import com.marketplease.marketplease_backend.exception.ConflictException;
@@ -89,6 +90,51 @@ public class AuthService {
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
         return toAuthUser(user);
+    }
+
+    public void changePassword(String email, ChangePasswordRequest request) {
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("No se pudo identificar el usuario autenticado");
+        }
+
+        if (request.getCurrentPassword() == null || request.getNewPassword() == null || request.getConfirmPassword() == null) {
+            throw new IllegalArgumentException("Debes enviar contraseña actual, nueva y confirmacion");
+        }
+
+        String currentPassword = request.getCurrentPassword().trim();
+        String newPassword = request.getNewPassword().trim();
+        String confirmPassword = request.getConfirmPassword().trim();
+
+        if (currentPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
+            throw new IllegalArgumentException("Debes completar todos los campos de contraseña");
+        }
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+
+        String storedPassword = user.getPassword();
+        if (storedPassword == null || storedPassword.isBlank()) {
+            throw new IllegalArgumentException("La cuenta no tiene contraseña valida registrada");
+        }
+
+        if (!storedPassword.startsWith("$2a$") && !storedPassword.startsWith("$2b$") && !storedPassword.startsWith("$2y$")) {
+            throw new IllegalArgumentException("La cuenta tiene un formato de contraseña no compatible");
+        }
+
+        if (!passwordEncoder.matches(currentPassword, storedPassword)) {
+            throw new IllegalArgumentException("La contraseña actual es incorrecta");
+        }
+
+        if (currentPassword.equals(newPassword)) {
+            throw new IllegalArgumentException("La nueva contraseña debe ser diferente a la actual");
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            throw new IllegalArgumentException("La confirmacion no coincide con la nueva contraseña");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 
     private AuthUserResponse toAuthUser(User user) {

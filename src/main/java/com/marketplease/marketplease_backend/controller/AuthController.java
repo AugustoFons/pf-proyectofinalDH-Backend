@@ -1,6 +1,7 @@
 package com.marketplease.marketplease_backend.controller;
 import com.marketplease.marketplease_backend.dto.AuthResponse;
 import com.marketplease.marketplease_backend.dto.AuthUserResponse;
+import com.marketplease.marketplease_backend.dto.ChangePasswordRequest;
 import com.marketplease.marketplease_backend.dto.LoginRequest;
 import com.marketplease.marketplease_backend.dto.RegisterRequest;
 import com.marketplease.marketplease_backend.service.AuthService;
@@ -9,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -36,5 +39,11 @@ public class AuthController {
     public ResponseEntity<AuthUserResponse> me(Authentication authentication) {
         AuthUserResponse response = authService.getCurrentUser(authentication.getName());
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<Map<String, String>> changePassword(Authentication authentication, @Valid @RequestBody ChangePasswordRequest request) {
+        authService.changePassword(authentication.getName(), request);
+        return ResponseEntity.ok(Map.of("message", "Contrasena actualizada exitosamente"));
     }
 }
