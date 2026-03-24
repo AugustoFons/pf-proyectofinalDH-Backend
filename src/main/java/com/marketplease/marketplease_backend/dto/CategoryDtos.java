@@ -8,5 +8,9 @@ public class CategoryDtos {
             @NotBlank @Size(max = 100) String name
     ) {}
 
+    public record CategoryUpdateReq(
+            @NotBlank @Size(max = 100) String name
+    ) {}
+
     public record CategoryRes(Long id, String name) {}
 }
