@@ -32,6 +32,10 @@ public class Product {
     @OrderBy("position ASC, id ASC")
     private List<ProductImage> images = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("position ASC, id ASC")
+    private List<ProductFeature> features = new ArrayList<>();
+
     @ManyToMany
     @JoinTable(name = "product_categories",
             joinColumns = @JoinColumn(name = "product_id"),
@@ -84,6 +88,14 @@ public class Product {
 
     public void setCategories(Set<Category> categories) {
         this.categories = categories;
+    }
+
+    public List<ProductFeature> getFeatures() {
+        return features;
+    }
+
+    public void setFeatures(List<ProductFeature> features) {
+        this.features = features;
     }
 
 

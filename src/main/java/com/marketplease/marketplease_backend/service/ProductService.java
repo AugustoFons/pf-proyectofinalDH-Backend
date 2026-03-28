@@ -2,6 +2,7 @@ package com.marketplease.marketplease_backend.service;
 
 import com.marketplease.marketplease_backend.domain.Category;
 import com.marketplease.marketplease_backend.domain.Product;
+import com.marketplease.marketplease_backend.domain.ProductFeature;
 import com.marketplease.marketplease_backend.domain.ProductImage;
 import com.marketplease.marketplease_backend.dto.ProductDtos.*;
 import com.marketplease.marketplease_backend.enums.ProductType;
@@ -12,7 +13,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashSet;
@@ -51,7 +51,8 @@ public class ProductService {
                 product.price(),
                 product.productType(),
                 product.imageUrls(),
-                product.categoryIds()
+                product.categoryIds(),
+                product.features()
         );
         var saved = productRepository.save(p);
         return toRes(saved);
@@ -64,6 +65,7 @@ public class ProductService {
         }
         p.getImages().clear();
         p.getCategories().clear();
+        p.getFeatures().clear();
 
         applyFields(
                 p,
@@ -72,7 +74,8 @@ public class ProductService {
                 product.price(),
                 product.productType(),
                 product.imageUrls(),
-                product.categoryIds()
+                product.categoryIds(),
+                product.features()
         );
         var saved = productRepository.save(p);
         return toRes(saved);
@@ -92,6 +95,9 @@ public class ProductService {
     private ProductRes toRes(Product p) {
         var imgs = p.getImages().stream().map(ProductImage::getUrl).toList();
         var cats = p.getCategories().stream().map(Category::getId).toList();
+        var feats = p.getFeatures().stream()
+                .map(f -> new FeatureRes(f.getIcon(), f.getLabel()))
+                .toList();
         return new ProductRes(
                 p.getId(),
                 p.getName(),
@@ -99,12 +105,15 @@ public class ProductService {
                 p.getPrice(),
                 p.getProductType(),
                 imgs,
-                cats
+                cats,
+                feats
         );
     }
 
     private void applyFields(Product p, String name, String description,
-                             java.math.BigDecimal price, ProductType productType, List<String> imageUrls, List<Long> categoryIds) {
+                             java.math.BigDecimal price, ProductType productType,
+                             List<String> imageUrls, List<Long> categoryIds,
+                             List<FeatureReq> features) {
         p.setName(name);
         p.setDescription(description);
         p.setPrice(price);
@@ -123,6 +132,17 @@ public class ProductService {
         if (categoryIds != null && !categoryIds.isEmpty()) {
             var cats = new LinkedHashSet<>(categoryRepository.findByIdIn(categoryIds));
             p.getCategories().addAll(cats);
+        }
+        if (features != null) {
+            int pos = 0;
+            for (var feat : features) {
+                var pf = new ProductFeature();
+                pf.setProduct(p);
+                pf.setIcon(feat.icon());
+                pf.setLabel(feat.label());
+                pf.setPosition(pos++);
+                p.getFeatures().add(pf);
+            }
         }
     }
 

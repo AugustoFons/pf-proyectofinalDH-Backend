@@ -1,6 +1,5 @@
 package com.marketplease.marketplease_backend.controller;
 
-import com.marketplease.marketplease_backend.domain.Product;
 import com.marketplease.marketplease_backend.dto.ProductDtos.*;
 import com.marketplease.marketplease_backend.service.ProductService;
 import org.springframework.data.domain.Page;
