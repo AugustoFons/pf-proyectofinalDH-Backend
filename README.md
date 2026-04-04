@@ -1,8 +1,8 @@
 # marketplease! – Backend
 
 ## Descripción
-Backend desarrollado en Java con Spring Boot que expone una API REST para la gestión de productos.
-Este repositorio corresponde al backend del proyecto desarrollado para el Sprint 1.
+Proyecto desarrollado en Java con Spring Boot que expone una API REST para la gestión de productos.
+Este repositorio corresponde al backend del proyecto.
 
 ## Tecnologías utilizadas
 - Java 21
@@ -12,8 +12,8 @@ Este repositorio corresponde al backend del proyecto desarrollado para el Sprint
 - Maven
 
 ## Documentación
-La documentación correspondiente al Sprint 1 se encuentra en la carpeta `/docs`:
-- Bitácora del sprint
+La documentación correspondiente al Sprint 1 y 2 se encuentra en la carpeta `/docs`:
+- Bitácora de los sprints
 - Identidad de marca
 - Plan de testing
 
@@ -47,6 +47,10 @@ spring.datasource.password
 
 Nota: el esquema de tablas se genera y actualiza automáticamente al iniciar la aplicación por primera vez mediante Hibernate (spring.jpa.hibernate.ddl-auto=update). El archivo src/main/resources/data.sql incializa datos para la tabla de categorias de productos. Y opcionalmente se deja disponible el archivo src/main/resources/data/dataproducts.sql con los inserts de productos e imagenes si se quiere llenar la db de datos manualmente luego de la inicialización.
 
+- Al iniciar la app, el backend inicializa (si no existe) un usuario administrador por defecto:
+  - Email: admin@marketplease.local
+  - Password inicial: password
+
 ## Ejecución
 mvn spring-boot:run
 
@@ -60,6 +64,7 @@ Repositorio Frontend: https://github.com/AugustoFons/pf-proyectofinalDH-Front
 A continuación se deja el enlace a un breve video donde se muestra como se inicializan las tablas por primera vez, la inserción de datos y una vista general de las pantallas. Es necesario previamente haber realizado los pasos previos de instalación mencionados en cada repositorio.
 
 https://drive.google.com/file/d/1kD3_EGqhuRWitlL_h6k0wXQv9cJ-cd5t/view?usp=sharing
+(El video se realizo en el Sprint 1)
 
 ---
 

@@ -2,6 +2,7 @@ package com.marketplease.marketplease_backend.controller;
 
 import com.marketplease.marketplease_backend.dto.ProductDtos.*;
 import com.marketplease.marketplease_backend.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,13 +34,13 @@ public class ProductController {
 
     // Crear
     @PostMapping
-    public ProductRes create(@RequestBody ProductCreateReq product) {
+    public ProductRes create(@Valid @RequestBody ProductCreateReq product) {
         return productService.create(product);
     }
 
     // Actualizar
     @PutMapping("/{id}")
-    public ProductRes update(@PathVariable Long id, @RequestBody ProductUpdateReq product) {
+    public ProductRes update(@PathVariable Long id, @Valid @RequestBody ProductUpdateReq product) {
         return productService.update(id, product);
     }
 

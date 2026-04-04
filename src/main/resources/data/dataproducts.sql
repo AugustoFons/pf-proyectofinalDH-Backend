@@ -190,3 +190,45 @@ INSERT IGNORE INTO product_categories (product_id, category_id)
 SELECT 23, c.id FROM categories c WHERE c.name = 'Otros';
 INSERT IGNORE INTO product_categories (product_id, category_id)
 SELECT 29, c.id FROM categories c WHERE c.name = 'Otros';
+
+-- Asigna caracteristicas aleatorias a algunos productos
+
+INSERT INTO product_features (product_id, icon, label, position)
+SELECT
+  ra.product_id,
+  f.icon,
+  f.label,
+  ra.position
+FROM (
+  SELECT
+    pp.product_id,
+    pos.position,
+    1 + FLOOR(RAND() * 8) AS feature_id
+  FROM (
+    SELECT p.id AS product_id
+    FROM products p
+    ORDER BY RAND()
+    LIMIT 8
+  ) pp
+  CROSS JOIN (
+    SELECT 0 AS position
+    UNION ALL
+    SELECT 1 AS position
+  ) pos
+) ra
+JOIN (
+  SELECT 1 AS id, 'TbTruck' AS icon, 'Envío rápido' AS label
+  UNION ALL SELECT 2, 'TbShieldCheck', 'Compra protegida'
+  UNION ALL SELECT 3, 'TbCertificate', 'Garantía oficial'
+  UNION ALL SELECT 4, 'TbClock', 'Entrega estimada 24h'
+  UNION ALL SELECT 5, 'TbWifi', 'Conectividad estable'
+  UNION ALL SELECT 6, 'TbBolt', 'Bajo consumo'
+  UNION ALL SELECT 7, 'TbPalette', 'Variedad de colores'
+  UNION ALL SELECT 8, 'TbWeight', 'Peso liviano'
+) f ON f.id = ra.feature_id
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM product_features pf
+  WHERE pf.product_id = ra.product_id
+    AND pf.position = ra.position
+);

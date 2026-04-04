@@ -6,6 +6,9 @@ INSERT INTO roles (name) VALUES ('ROLE_USER')
 INSERT INTO roles (name) VALUES ('ROLE_ADMIN')
     ON DUPLICATE KEY UPDATE name = VALUES(name);
 
+-- El usuario admin por defecto se inicializa en el arranque de la app
+-- desde AdminUserInitializer, usando PasswordEncoder para evitar hashes inválidos.
+
 INSERT INTO categories (name) VALUES ('Vehículos')
     ON DUPLICATE KEY UPDATE name = VALUES(name);
 
