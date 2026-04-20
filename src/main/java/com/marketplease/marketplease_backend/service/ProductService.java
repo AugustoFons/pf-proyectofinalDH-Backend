@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -86,10 +87,27 @@ public class ProductService {
         productRepository.delete(p);
     }
 
-    public Page<ProductRes> search(int page, int size, String q, Long categoryId) {
+    public Page<ProductRes> search(int page,
+                                int size,
+                                String q,
+                                Long categoryId,
+                                ProductType productType,
+                                LocalDate dateFrom,
+                                LocalDate dateTo) {
         var pageable = PageRequest.of(page, Math.min(size, 10), Sort.by(Sort.Direction.DESC, "id"));
         String query = (q == null || q.isBlank()) ? null : q.trim();
-        return productRepository.search(query, categoryId, pageable).map(this::toRes);
+
+        return productRepository.search(query, categoryId, productType, pageable).map(this::toRes);
+    }
+
+    public List<String> suggest(String q, int limit) {
+        String query = (q == null || q.isBlank()) ? null : q.trim();
+        if (query == null || query.length() < 2) {
+            return List.of();
+        }
+
+        int safeLimit = Math.max(1, Math.min(limit, 10));
+        return productRepository.suggestNames(query, PageRequest.of(0, safeLimit));
     }
 
     private ProductRes toRes(Product p) {
@@ -111,9 +129,9 @@ public class ProductService {
     }
 
     private void applyFields(Product p, String name, String description,
-                             java.math.BigDecimal price, ProductType productType,
-                             List<String> imageUrls, List<Long> categoryIds,
-                             List<FeatureReq> features) {
+                            java.math.BigDecimal price, ProductType productType,
+                            List<String> imageUrls, List<Long> categoryIds,
+                            List<FeatureReq> features) {
         p.setName(name);
         p.setDescription(description);
         p.setPrice(price);
