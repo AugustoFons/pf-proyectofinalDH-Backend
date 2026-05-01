@@ -2,11 +2,14 @@ package com.marketplease.marketplease_backend.repositories;
 
 import com.marketplease.marketplease_backend.domain.Product;
 import com.marketplease.marketplease_backend.enums.ProductType;
+import com.marketplease.marketplease_backend.enums.ReservationStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +28,19 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     OR LOWER(COALESCE(p.description, '')) LIKE LOWER(CONCAT('%', :q, '%')))
                     AND (:categoryId IS NULL OR c.id = :categoryId)
                     AND (:productType IS NULL OR p.productType = :productType)
+                    AND (
+                        :dateFrom IS NULL
+                        OR :dateTo IS NULL
+                        OR :productType IS NULL
+                        OR :productType <> com.marketplease.marketplease_backend.enums.ProductType.RESERVA
+                        OR NOT EXISTS (
+                            SELECT 1 FROM Reservation r
+                            WHERE r.product = p
+                              AND r.status IN :blockingStatuses
+                              AND r.dateFrom < :dateTo
+                              AND r.dateTo > :dateFrom
+                        )
+                    )
                 ORDER BY
                     CASE
                         WHEN :q IS NULL THEN 0
@@ -43,10 +59,26 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     OR LOWER(COALESCE(p.description, '')) LIKE LOWER(CONCAT('%', :q, '%')))
                     AND (:categoryId IS NULL OR c.id = :categoryId)
                     AND (:productType IS NULL OR p.productType = :productType)
+                    AND (
+                        :dateFrom IS NULL
+                        OR :dateTo IS NULL
+                        OR :productType IS NULL
+                        OR :productType <> com.marketplease.marketplease_backend.enums.ProductType.RESERVA
+                        OR NOT EXISTS (
+                            SELECT 1 FROM Reservation r
+                            WHERE r.product = p
+                              AND r.status IN :blockingStatuses
+                              AND r.dateFrom < :dateTo
+                              AND r.dateTo > :dateFrom
+                        )
+                    )
     """)
     Page<Product> search(@Param("q") String q,
                         @Param("categoryId") Long categoryId,
                         @Param("productType") ProductType productType,
+                        @Param("dateFrom") LocalDate dateFrom,
+                        @Param("dateTo") LocalDate dateTo,
+                        @Param("blockingStatuses") Collection<ReservationStatus> blockingStatuses,
                         Pageable pageable);
 
     @Query("""

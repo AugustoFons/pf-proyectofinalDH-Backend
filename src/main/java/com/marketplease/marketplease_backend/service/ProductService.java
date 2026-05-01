@@ -6,6 +6,7 @@ import com.marketplease.marketplease_backend.domain.ProductFeature;
 import com.marketplease.marketplease_backend.domain.ProductImage;
 import com.marketplease.marketplease_backend.dto.ProductDtos.*;
 import com.marketplease.marketplease_backend.enums.ProductType;
+import com.marketplease.marketplease_backend.enums.ReservationStatus;
 import com.marketplease.marketplease_backend.repositories.CategoryRepository;
 import com.marketplease.marketplease_backend.repositories.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -97,7 +98,21 @@ public class ProductService {
         var pageable = PageRequest.of(page, Math.min(size, 10), Sort.by(Sort.Direction.DESC, "id"));
         String query = (q == null || q.isBlank()) ? null : q.trim();
 
-        return productRepository.search(query, categoryId, productType, pageable).map(this::toRes);
+        if ((dateFrom == null) != (dateTo == null)) {
+            throw new IllegalArgumentException("Debe enviar dateFrom y dateTo juntos");
+        }
+        if (dateFrom != null && !dateTo.isAfter(dateFrom)) {
+            throw new IllegalArgumentException("dateTo debe ser posterior a dateFrom");
+        }
+
+        List<ReservationStatus> blockingStatuses = List.of(
+                ReservationStatus.PENDING,
+                ReservationStatus.BOOKED
+        );
+
+        return productRepository
+                .search(query, categoryId, productType, dateFrom, dateTo, blockingStatuses, pageable)
+                .map(this::toRes);
     }
 
     public List<String> suggest(String q, int limit) {

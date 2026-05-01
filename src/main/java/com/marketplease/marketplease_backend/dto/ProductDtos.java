@@ -2,11 +2,12 @@ package com.marketplease.marketplease_backend.dto;
 import com.marketplease.marketplease_backend.enums.ProductType;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 public class ProductDtos {
 
-    public record FeatureReq(
+        public record FeatureReq(
             @NotBlank @Size(max = 60) String icon,
             @NotBlank @Size(max = 200) String label
     ) {}
@@ -40,5 +41,15 @@ public class ProductDtos {
             List<String> images,
             List<Long> categories,
             List<FeatureRes> features
+    ) {}
+
+    public record DateRangeRes(LocalDate from, LocalDate to) {}
+
+    public record ProductAvailabilityRes(
+            Long productId,
+            LocalDate from,
+            LocalDate to,
+            List<DateRangeRes> booked,
+            List<DateRangeRes> available
     ) {}
 }

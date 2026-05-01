@@ -3,6 +3,7 @@ package com.marketplease.marketplease_backend.controller;
 import com.marketplease.marketplease_backend.dto.ProductDtos.*;
 import com.marketplease.marketplease_backend.enums.ProductType;
 import com.marketplease.marketplease_backend.service.ProductService;
+import com.marketplease.marketplease_backend.service.ReservationService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +18,11 @@ import java.util.Map;
 @RequestMapping("/api/v1/products")
 public class ProductController {
     private final ProductService productService;
+    private final ReservationService reservationService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, ReservationService reservationService) {
         this.productService = productService;
+        this.reservationService = reservationService;
     }
 
     // Listar paginados
@@ -70,6 +73,13 @@ public class ProductController {
     public List<String> suggestions(@RequestParam String q,
                                     @RequestParam(defaultValue = "5") int limit) {
         return productService.suggest(q, limit);
+    }
+
+    @GetMapping("/{id}/availability")
+    public ProductAvailabilityRes availability(@PathVariable Long id,
+                                               @RequestParam(required = false) LocalDate from,
+                                               @RequestParam(required = false) LocalDate to) {
+        return reservationService.getProductAvailability(id, from, to);
     }
 
 }
