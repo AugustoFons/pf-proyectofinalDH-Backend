@@ -38,6 +38,14 @@ public class User implements UserDetails {
     )
     private Set<Role> roles;
 
+    @ManyToMany
+    @JoinTable(
+            name = "user_favorites",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private Set<Product> favoriteProducts = new java.util.HashSet<>();
+
     public User() {}
 
     public User(Long id, String firstName, String lastName, String email, String password, boolean enabled, Set<Role> roles) {
@@ -133,6 +141,14 @@ public class User implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public Set<Product> getFavoriteProducts() {
+        return favoriteProducts;
+    }
+
+    public void setFavoriteProducts(Set<Product> favoriteProducts) {
+        this.favoriteProducts = favoriteProducts;
     }
 
 }
