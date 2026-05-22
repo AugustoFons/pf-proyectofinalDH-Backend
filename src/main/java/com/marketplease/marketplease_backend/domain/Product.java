@@ -42,6 +42,12 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new LinkedHashSet<>();
 
+    @org.hibernate.annotations.Formula("(SELECT COALESCE(AVG(r.score), 0.0) FROM reviews r WHERE r.product_id = id)")
+    private Double averageRating = 0.0;
+
+    @org.hibernate.annotations.Formula("(SELECT COUNT(r.id) FROM reviews r WHERE r.product_id = id)")
+    private Integer reviewCount = 0;
+
     public Long getId() {
         return id;
     }
@@ -105,6 +111,14 @@ public class Product {
 
     public void setProductType(ProductType productType) {
         this.productType = productType;
+    }
+
+    public Double getAverageRating() {
+        return averageRating;
+    }
+
+    public Integer getReviewCount() {
+        return reviewCount;
     }
 }
 

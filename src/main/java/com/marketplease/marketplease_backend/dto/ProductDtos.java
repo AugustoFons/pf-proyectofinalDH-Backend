@@ -40,7 +40,9 @@ public class ProductDtos {
             ProductType productType,
             List<String> images,
             List<Long> categories,
-            List<FeatureRes> features
+            List<FeatureRes> features,
+            Double averageRating,
+            Integer reviewCount
     ) {}
 
     public record DateRangeRes(LocalDate from, LocalDate to) {}

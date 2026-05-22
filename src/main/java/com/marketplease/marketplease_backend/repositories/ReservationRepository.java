@@ -36,4 +36,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
                                               @Param("dateFrom") LocalDate dateFrom,
                                               @Param("dateTo") LocalDate dateTo,
                                               @Param("blockingStatuses") Collection<ReservationStatus> blockingStatuses);
+
+    List<Reservation> findByProductIdAndUserId(Long productId, Long userId);
+
+    List<Reservation> findByUserEmailOrderByCreatedAtDesc(String email);
 }

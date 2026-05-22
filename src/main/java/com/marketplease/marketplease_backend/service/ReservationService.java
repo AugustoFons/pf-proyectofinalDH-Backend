@@ -103,10 +103,23 @@ public class ReservationService {
         return toRes(saved);
     }
 
+    public List<ReservationRes> getUserReservations(String email) {
+        return reservationRepository.findByUserEmailOrderByCreatedAtDesc(email)
+                .stream()
+                .map(this::toRes)
+                .toList();
+    }
+
     private ReservationRes toRes(Reservation r) {
+        String firstImage = r.getProduct().getImages().isEmpty()
+                ? null
+                : r.getProduct().getImages().get(0).getUrl();
+
         return new ReservationRes(
                 r.getId(),
                 r.getProduct().getId(),
+                r.getProduct().getName(),
+                firstImage,
                 r.getUser().getId(),
                 r.getDateFrom(),
                 r.getDateTo(),

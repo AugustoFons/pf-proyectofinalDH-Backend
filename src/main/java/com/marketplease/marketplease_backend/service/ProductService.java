@@ -139,7 +139,9 @@ public class ProductService {
                 p.getProductType(),
                 imgs,
                 cats,
-                feats
+                feats,
+                p.getAverageRating(),
+                p.getReviewCount()
         );
     }
 

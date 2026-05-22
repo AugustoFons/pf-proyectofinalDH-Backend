@@ -17,6 +17,8 @@ public class ReservationDtos {
     public record ReservationRes(
             Long id,
             Long productId,
+            String productName,
+            String productImage,
             Long userId,
             LocalDate dateFrom,
             LocalDate dateTo,
