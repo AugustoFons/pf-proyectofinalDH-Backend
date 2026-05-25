@@ -14,6 +14,13 @@ public class ProductDtos {
 
     public record FeatureRes(String icon, String label) {}
 
+    public record PolicyReq(
+            @NotBlank @Size(max = 150) String title,
+            @NotBlank @Size(max = 2000) String description
+    ) {}
+
+    public record PolicyRes(String title, String description) {}
+
     public record ProductCreateReq(
             @NotBlank @Size(max = 150) String name,
             @Size(max = 10_000) String description,
@@ -21,7 +28,8 @@ public class ProductDtos {
             @NotNull ProductType productType,
             @Size(max = 10) List<@NotBlank String> imageUrls,
             List<@NotNull Long> categoryIds,
-            List<FeatureReq> features
+            List<FeatureReq> features,
+            List<PolicyReq> policies
     ) {}
 
     public record ProductUpdateReq(
@@ -31,7 +39,8 @@ public class ProductDtos {
             @NotNull ProductType productType,
             @Size(max = 20) List<@NotBlank String> imageUrls,
             List<@NotNull Long> categoryIds,
-            List<FeatureReq> features
+            List<FeatureReq> features,
+            List<PolicyReq> policies
     ) {}
 
     public record ProductRes(
@@ -41,6 +50,7 @@ public class ProductDtos {
             List<String> images,
             List<Long> categories,
             List<FeatureRes> features,
+            List<PolicyRes> policies,
             Double averageRating,
             Integer reviewCount
     ) {}

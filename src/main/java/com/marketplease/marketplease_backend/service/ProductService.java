@@ -4,6 +4,7 @@ import com.marketplease.marketplease_backend.domain.Category;
 import com.marketplease.marketplease_backend.domain.Product;
 import com.marketplease.marketplease_backend.domain.ProductFeature;
 import com.marketplease.marketplease_backend.domain.ProductImage;
+import com.marketplease.marketplease_backend.domain.ProductPolicy;
 import com.marketplease.marketplease_backend.dto.ProductDtos.*;
 import com.marketplease.marketplease_backend.enums.ProductType;
 import com.marketplease.marketplease_backend.enums.ReservationStatus;
@@ -54,7 +55,8 @@ public class ProductService {
                 product.productType(),
                 product.imageUrls(),
                 product.categoryIds(),
-                product.features()
+                product.features(),
+                product.policies()
         );
         var saved = productRepository.save(p);
         return toRes(saved);
@@ -68,6 +70,7 @@ public class ProductService {
         p.getImages().clear();
         p.getCategories().clear();
         p.getFeatures().clear();
+        p.getPolicies().clear();
 
         applyFields(
                 p,
@@ -77,7 +80,8 @@ public class ProductService {
                 product.productType(),
                 product.imageUrls(),
                 product.categoryIds(),
-                product.features()
+                product.features(),
+                product.policies()
         );
         var saved = productRepository.save(p);
         return toRes(saved);
@@ -131,6 +135,9 @@ public class ProductService {
         var feats = p.getFeatures().stream()
                 .map(f -> new FeatureRes(f.getIcon(), f.getLabel()))
                 .toList();
+        var pols = p.getPolicies().stream()
+                .map(pol -> new PolicyRes(pol.getTitle(), pol.getDescription()))
+                .toList();
         return new ProductRes(
                 p.getId(),
                 p.getName(),
@@ -140,6 +147,7 @@ public class ProductService {
                 imgs,
                 cats,
                 feats,
+                pols,
                 p.getAverageRating(),
                 p.getReviewCount()
         );
@@ -148,7 +156,8 @@ public class ProductService {
     private void applyFields(Product p, String name, String description,
                             java.math.BigDecimal price, ProductType productType,
                             List<String> imageUrls, List<Long> categoryIds,
-                            List<FeatureReq> features) {
+                            List<FeatureReq> features,
+                            List<PolicyReq> policies) {
         p.setName(name);
         p.setDescription(description);
         p.setPrice(price);
@@ -177,6 +186,17 @@ public class ProductService {
                 pf.setLabel(feat.label());
                 pf.setPosition(pos++);
                 p.getFeatures().add(pf);
+            }
+        }
+        if (policies != null) {
+            int pos = 0;
+            for (var pol : policies) {
+                var pp = new ProductPolicy();
+                pp.setProduct(p);
+                pp.setTitle(pol.title());
+                pp.setDescription(pol.description());
+                pp.setPosition(pos++);
+                p.getPolicies().add(pp);
             }
         }
     }

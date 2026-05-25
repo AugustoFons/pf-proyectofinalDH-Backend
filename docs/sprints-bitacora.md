@@ -116,3 +116,42 @@ Durante el desarrollo del Sprint 2 se tomaron algunas decisiones técnicas y de 
   Se optó por implementar las características como entidades reutilizables que pueden asociarse a múltiples productos, facilitando su mantenimiento desde el panel administrativo.
 
 ---
+
+# Sprint 3 – Bitácora
+
+## 3.1 Objetivo del Sprint 3
+
+El objetivo del Sprint 3 fue incorporar funcionalidades de **búsqueda, disponibilidad, favoritos, políticas de producto, compartir en redes, puntuaciones y gestión de categorías**, mejorando la experiencia del usuario y ampliando las capacidades interactivas de la plataforma.
+
+Durante este sprint se trabajó principalmente en:
+- Búsqueda de productos con autocompletar y calendario
+- Visualización de disponibilidad de fechas
+- Sistema de favoritos para usuarios autenticados
+- Bloque de políticas del producto
+- Compartir productos en redes sociales
+- Puntuación y reseñas de productos
+- Eliminación de categorías desde administración
+
+---
+
+## 3.2 User Stories implementadas
+
+Durante el Sprint 3 se planificaron e implementaron las siguientes historias de usuario:
+
+- #22 Realizar búsqueda
+- #23 Visualizar disponibilidad
+- #24 Marcar como favorito
+- #25 Listar productos favoritos
+- #26 Ver bloque de políticas del producto
+- #27 Redes: Compartir productos
+- #28 Puntuar producto
+- #29 Eliminar categoría
+
+---
+
+## 3.3 Licencias de diseño y decisiones de implementación
+
+- **Adaptación del sistema de compras y reservas:**  
+  Al haberse incluido en el sistema inicialmente un sistema de compras, además del requerido de reservas, se adapto para que tenga un comportamiento similar en cuantos al sistema de puntuación y reseñas. Una vez que el usuario selecciona "Comprar", queda habilitado para puntuar y reseñar. Adicionalmente se agrego el menú "Actividad", donde el usuario puede consultar sus compras y reservas. 
+
+---

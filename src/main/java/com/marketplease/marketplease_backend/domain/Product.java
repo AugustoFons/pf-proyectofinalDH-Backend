@@ -36,6 +36,10 @@ public class Product {
     @OrderBy("position ASC, id ASC")
     private List<ProductFeature> features = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("position ASC, id ASC")
+    private List<ProductPolicy> policies = new ArrayList<>();
+
     @ManyToMany
     @JoinTable(name = "product_categories",
             joinColumns = @JoinColumn(name = "product_id"),
@@ -102,6 +106,14 @@ public class Product {
 
     public void setFeatures(List<ProductFeature> features) {
         this.features = features;
+    }
+
+    public List<ProductPolicy> getPolicies() {
+        return policies;
+    }
+
+    public void setPolicies(List<ProductPolicy> policies) {
+        this.policies = policies;
     }
 
 

@@ -232,3 +232,30 @@ WHERE NOT EXISTS (
   WHERE pf.product_id = ra.product_id
     AND pf.position = ra.position
 );
+
+-- Sprint 3: Políticas estándar aplicadas a algunos productos representativos
+-- (mix de VENTA y RESERVA).
+INSERT INTO product_policies (product_id, title, description, position)
+SELECT p.id, x.title, x.description, x.position
+FROM products p
+CROSS JOIN (
+  SELECT
+    'Normas de uso' AS title,
+    'El uso del producto es responsabilidad del comprador o de quien realiza la reserva. Se recomienda seguir las indicaciones del vendedor y mantener el producto en las mismas condiciones en que fue recibido.' AS description,
+    0 AS position
+  UNION ALL SELECT
+    'Política de cancelación y devolución',
+    'Las cancelaciones pueden realizarse hasta 48 horas antes de la fecha pactada sin costo adicional. Para devoluciones en compras, el producto debe encontrarse en su estado original dentro de los 10 días posteriores a la entrega.',
+    1
+  UNION ALL SELECT
+    'Formas de pago y entrega',
+    'Se aceptan pagos con tarjeta de crédito, débito y transferencia bancaria. La entrega o disponibilidad del producto se coordina con el vendedor a través de la plataforma una vez confirmada la operación.',
+    2
+) x
+WHERE p.id IN (1, 9, 25, 28, 30, 32)
+  AND NOT EXISTS (
+    SELECT 1
+    FROM product_policies pp
+    WHERE pp.product_id = p.id
+      AND pp.position = x.position
+  );
