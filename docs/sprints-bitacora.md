@@ -155,3 +155,49 @@ Durante el Sprint 3 se planificaron e implementaron las siguientes historias de 
   Al haberse incluido en el sistema inicialmente un sistema de compras, además del requerido de reservas, se adapto para que tenga un comportamiento similar en cuantos al sistema de puntuación y reseñas. Una vez que el usuario selecciona "Comprar", queda habilitado para puntuar y reseñar. Adicionalmente se agrego el menú "Actividad", donde el usuario puede consultar sus compras y reservas. 
 
 ---
+
+# Sprint 4 – Bitácora
+
+## 4.1 Objetivo del Sprint 4
+
+El objetivo del Sprint 4 es consolidar el **flujo completo de reservas**, incorporando la selección de fechas, la confirmación de la reserva y las comunicaciones asociadas al proceso.
+
+Durante este sprint se trabaja principalmente en:
+- Selección de fechas para reservas
+- Confirmación y gestión de reservas
+- Comunicaciones por correo electrónico relacionadas con reservas
+
+---
+
+## 4.2 User Stories implementadas
+
+### #30 Reservas: Seleccionar fecha
+
+Esta historia de usuario fue resuelta de forma anticipada durante los Sprints 2 y 3, como resultado de la implementación progresiva de funcionalidades relacionadas:
+
+- **Sprint 2:** Se implementó el sistema de autenticación (registro, login, cierre de sesión) y el control de roles, estableciendo la base necesaria para validar si un usuario está logueado al momento de reservar.
+- **Sprint 3:** Se implementaron la búsqueda con calendario doble, la visualización de disponibilidad de fechas y el sistema de reservas desde el detalle del producto, incluyendo el calendario interactivo con selección de rango de fechas.
+
+Todos los criterios de aceptación de la historia #30 se encuentran cubiertos por la implementación existente:
+
+| Criterio de aceptación | Componente / Funcionalidad |
+| --- | --- |
+| Acceder a reservas desde detalle del producto | `ProductDetail.tsx` – Botón "Reservar ahora" y calendario de disponibilidad para productos tipo RESERVA |
+| Verificar si el usuario está logueado al reservar | `ProductDetail.tsx` – Validación de autenticación previa a la reserva |
+| Redirigir a página de reserva si está logueado | Flujo de reserva integrado en el detalle del producto |
+| Redirigir a login si no está registrado | `AuthPromptModal.tsx` – Modal con redirección a `/acceso` |
+| Texto indicando que el login es obligatorio | `AuthPromptModal.tsx` – "Para comprar o reservar, primero inicia sesión" |
+| Buscar productos disponibles por fecha | `Home.tsx` – Modo "RESERVAS" con filtros `dateFrom` y `dateTo` |
+| Mostrar lista de productos que coinciden con la fecha | Servicio de productos con filtrado por tipo y rango de fechas |
+| Seleccionar rango de fechas para la reserva | `AvailabilityCalendar.tsx` – Calendario doble con selección de rango |
+| Imprimir rango seleccionado en el formulario | Fechas seleccionadas reflejadas en el formulario de reserva |
+| No incluir fechas no disponibles en el rango | Validación de superposición con fechas ocupadas en el calendario |
+
+---
+
+## 4.3 Licencias de diseño y decisiones de implementación
+
+- **Resolución anticipada de la historia #30:**  
+  La historia de usuario #30 fue implementada de forma orgánica durante los sprints anteriores. La decisión de incluir el sistema de reservas como parte del flujo de productos (Sprint 3) y el sistema de autenticación (Sprint 2) hizo que todos los criterios de aceptación quedaran cubiertos sin necesidad de desarrollo adicional en el Sprint 4.
+
+---

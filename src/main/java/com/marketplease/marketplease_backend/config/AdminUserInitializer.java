@@ -18,6 +18,7 @@ public class AdminUserInitializer implements ApplicationRunner {
 
     private static final String DEFAULT_ADMIN_EMAIL = "admin@marketplease.local";
     private static final String DEFAULT_ADMIN_PASSWORD = "password";
+    private static final String DEFAULT_ADMIN_PHONE = "+5492215721191";
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -35,6 +36,12 @@ public class AdminUserInitializer implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         Role roleAdmin = roleRepository.findByName("ROLE_ADMIN")
                 .orElseGet(() -> roleRepository.save(new Role(null, "ROLE_ADMIN")));
+
+        // Inicializa el número de contacto del proveedor si aún no tiene uno.
+        if (roleAdmin.getPhone() == null || roleAdmin.getPhone().isBlank()) {
+            roleAdmin.setPhone(DEFAULT_ADMIN_PHONE);
+            roleAdmin = roleRepository.save(roleAdmin);
+        }
 
         Role roleUser = roleRepository.findByName("ROLE_USER")
                 .orElseGet(() -> roleRepository.save(new Role(null, "ROLE_USER")));

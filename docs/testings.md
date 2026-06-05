@@ -66,3 +66,34 @@ Se realizaron pruebas funcionales manuales desde la interfaz de usuario, validan
 | #29 Eliminar categoría        | Eliminar una categoría desde el panel de administración   | La categoría se elimina correctamente tras confirmar la acción       | OK                 |
 
 Todos los casos de prueba definidos para el Sprint 3 fueron ejecutados exitosamente.
+
+---
+
+# Plan de testing – Sprint 4
+
+Se realizaron pruebas funcionales manuales desde la interfaz de usuario, validando los criterios de aceptación definidos para cada historia de usuario del Sprint 4.
+
+| User Story                          | Caso de prueba                                                          | Resultado esperado                                                                  | Resultado obtenido |
+| ----------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------ |
+| #30 Reservas: Seleccionar fecha     | Acceder a la sección de reservas desde el detalle de un producto RESERVA | Se visualiza el calendario de disponibilidad y el botón "Reservar ahora"           | OK                 |
+| #30 Reservas: Seleccionar fecha     | Hacer clic en "Reservar ahora" sin estar logueado                       | Se muestra el modal de autenticación con mensaje de login obligatorio               | OK                 |
+| #30 Reservas: Seleccionar fecha     | Verificar texto del modal de autenticación                              | El modal indica que el login es obligatorio y ofrece opción de registro             | OK                 |
+| #30 Reservas: Seleccionar fecha     | Hacer clic en "Reservar ahora" estando logueado                         | Se ejecuta el flujo de reserva desde el detalle del producto                        | OK                 |
+| #30 Reservas: Seleccionar fecha     | Buscar productos disponibles por fecha en modo RESERVAS                 | Se muestran productos disponibles para el rango de fechas seleccionado              | OK                 |
+| #30 Reservas: Seleccionar fecha     | Seleccionar un rango de fechas en el calendario doble                   | El calendario permite seleccionar fecha inicio y fecha fin correctamente            | OK                 |
+| #30 Reservas: Seleccionar fecha     | Verificar que el rango seleccionado se refleje en el formulario         | Las fechas seleccionadas se imprimen en el texto del formulario de reserva          | OK                 |
+| #30 Reservas: Seleccionar fecha     | Intentar seleccionar fechas ocupadas dentro del rango                   | El sistema impide incluir fechas no disponibles y muestra mensaje de error          | OK                 |
+| #30 Reservas: Seleccionar fecha     | Verificar indicadores visuales de disponibilidad en el calendario       | Fechas disponibles en verde, ocupadas en rojo, fuera de rango en gris              | OK                 |
+| #30 Reservas: Seleccionar fecha     | Crear una reserva con rango de fechas válido                            | La reserva se crea exitosamente y se muestra mensaje de confirmación                | OK                 |
+| #31 Reservas: Visualizar detalles   | Abrir el modal de confirmación con "Reservar ahora"                     | Se muestra el detalle del producto (imagen, nombre, ubicación, precio y descripción) | OK                 |
+| #31 Reservas: Visualizar detalles   | Verificar los datos del usuario en la confirmación                      | Se muestran nombre, apellido y correo del usuario autenticado, expandidos por defecto | OK                 |
+| #31 Reservas: Visualizar detalles   | Verificar el periodo seleccionado en la confirmación                    | Se muestran las fechas "desde" y "hasta" seleccionadas en el calendario             | OK                 |
+| #31 Reservas: Visualizar detalles   | Verificar el botón de confirmación                                      | El modal presenta el botón "Confirmar reserva" para enviar la reserva               | OK                 |
+| #32 Realizar reserva                | Confirmar una reserva con rango de fechas válido                        | La reserva se crea y el modal muestra el comprobante con código, estado y fecha     | OK                 |
+| #32 Realizar reserva                | Verificar el contenido del comprobante                                  | El comprobante muestra titular, producto, periodo y fecha de emisión de la operación | OK                 |
+| #32 Realizar reserva                | Descargar el comprobante de la reserva                                  | Se abre el documento imprimible del comprobante (permite Guardar como PDF)          | OK                 |
+| #32 Realizar reserva                | Ir a "Mi Actividad" desde el comprobante                                | Se navega a /actividad y la reserva aparece en el registro de reservas              | OK                 |
+| #32 Realizar reserva                | Intentar reservar fechas ya ocupadas                                    | El sistema muestra el mensaje específico "Las fechas seleccionadas no están disponibles" | OK             |
+| #32 Realizar reserva                | Intentar reservar con una fecha de inicio pasada                        | El sistema muestra un mensaje de error específico indicando que la fecha no es válida | OK                 |
+
+Todos los casos de prueba definidos para el Sprint 4 fueron ejecutados exitosamente.

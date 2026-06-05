@@ -12,6 +12,9 @@ public class Role {
     @Column(unique = true)
     private String name;
 
+    @Column(length = 30)
+    private String phone;
+
     public Role() {}
 
     public Role(Long id, String name) {
@@ -33,6 +36,14 @@ public class Role {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
 }
