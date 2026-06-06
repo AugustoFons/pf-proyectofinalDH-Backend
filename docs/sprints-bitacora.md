@@ -64,7 +64,7 @@ Durante el desarrollo se tomaron algunas decisiones que implicaron adaptaciones 
 
 ---
 
-# Sprint 2 – Bitácora (Modelo)
+# Sprint 2 – Bitácora
 
 ## 2.1 Objetivo del Sprint 2
 
@@ -166,38 +166,41 @@ Durante este sprint se trabaja principalmente en:
 - Selección de fechas para reservas
 - Confirmación y gestión de reservas
 - Comunicaciones por correo electrónico relacionadas con reservas
+- Comunicación con el proveedor a través de WhatsApp
 
 ---
 
 ## 4.2 User Stories implementadas
+Durante el Sprint 3 se planificaron e implementaron las siguientes historias de usuario:
 
-### #30 Reservas: Seleccionar fecha
+- #30 Reservas: Seleccionar fecha
+- #31 Reservas: Visualizar detalles
+- #32 Realizar reserva
+- #33 Acceder a historial
+- #34 WhatsApp: Iniciar chat
+- #35 Notificación: Confirmar reserva/compra por correo
 
-Esta historia de usuario fue resuelta de forma anticipada durante los Sprints 2 y 3, como resultado de la implementación progresiva de funcionalidades relacionadas:
-
-- **Sprint 2:** Se implementó el sistema de autenticación (registro, login, cierre de sesión) y el control de roles, estableciendo la base necesaria para validar si un usuario está logueado al momento de reservar.
-- **Sprint 3:** Se implementaron la búsqueda con calendario doble, la visualización de disponibilidad de fechas y el sistema de reservas desde el detalle del producto, incluyendo el calendario interactivo con selección de rango de fechas.
-
-Todos los criterios de aceptación de la historia #30 se encuentran cubiertos por la implementación existente:
-
-| Criterio de aceptación | Componente / Funcionalidad |
-| --- | --- |
-| Acceder a reservas desde detalle del producto | `ProductDetail.tsx` – Botón "Reservar ahora" y calendario de disponibilidad para productos tipo RESERVA |
-| Verificar si el usuario está logueado al reservar | `ProductDetail.tsx` – Validación de autenticación previa a la reserva |
-| Redirigir a página de reserva si está logueado | Flujo de reserva integrado en el detalle del producto |
-| Redirigir a login si no está registrado | `AuthPromptModal.tsx` – Modal con redirección a `/acceso` |
-| Texto indicando que el login es obligatorio | `AuthPromptModal.tsx` – "Para comprar o reservar, primero inicia sesión" |
-| Buscar productos disponibles por fecha | `Home.tsx` – Modo "RESERVAS" con filtros `dateFrom` y `dateTo` |
-| Mostrar lista de productos que coinciden con la fecha | Servicio de productos con filtrado por tipo y rango de fechas |
-| Seleccionar rango de fechas para la reserva | `AvailabilityCalendar.tsx` – Calendario doble con selección de rango |
-| Imprimir rango seleccionado en el formulario | Fechas seleccionadas reflejadas en el formulario de reserva |
-| No incluir fechas no disponibles en el rango | Validación de superposición con fechas ocupadas en el calendario |
 
 ---
 
 ## 4.3 Licencias de diseño y decisiones de implementación
 
 - **Resolución anticipada de la historia #30:**  
-  La historia de usuario #30 fue implementada de forma orgánica durante los sprints anteriores. La decisión de incluir el sistema de reservas como parte del flujo de productos (Sprint 3) y el sistema de autenticación (Sprint 2) hizo que todos los criterios de aceptación quedaran cubiertos sin necesidad de desarrollo adicional en el Sprint 4.
+  La historia de usuario #30 fue implementada de forma indirecta durante los sprints anteriores. La decisión de incluir el sistema de reservas como parte del flujo de productos (Sprint 3) y el sistema de autenticación (Sprint 2) hizo que todos los criterios de aceptación quedaran cubiertos sin necesidad de desarrollo adicional en el Sprint 4.
+
+- **Confirmación de la reserva mediante modal en lugar de página dedicada (#31):**  
+  Si bien la historia de usuario menciona una "página de reservas", se optó por implementar la confirmación como un **modal** sobre el detalle del producto. Esto permite mantener el contexto visual con todos los detalles del producto y evita una navegación adicional. Los cuatro criterios de aceptación se cumplen igualmente dentro del modal.
+
+- **Realizar reserva/compra (#32):**  
+  Esta historia tambien la considera parcialmente completa por decisiones anteriores, considere darle más detalle al modal de confirmación para que tras la confirmación se genere un **comprobante tipo ticket** descargable con todo el detalle de la operación. Con esto se incorporan dos acciones: **"Descargar comprobante"**, que genera un documento imprimible en una ventana aparte (permite *Guardar como PDF*), e **"Ir a mi actividad"**, que navega a `/actividad`.
+
+- **Resolución anticipada de la historia #33:**  
+  El historial de reservas quedó cubierto por la sección **"Mi Actividad"** implementada como una licensa de diseño en el Sprint 3, que ya lista las reservas del usuario ordenadas por fecha y con la información relevante de cada una (producto, periodo de uso, fecha de registro y estado). Por este motivo no se requirió desarrollo adicional en el Sprint 4.
+
+- **Comunicación por WhatsApp (#34):**  
+  El número de WhatsApp se almacena en la tabla de roles en el rol `ROLE_ADMIN`, por defecto se carga mi número personal. Dado que el enlace oficial `wa.me` no permite a la web confirmar si el mensaje fue efectivamente enviado, se muestra una notificación al iniciar el chat y una confirmación adicional al regresar a la aplicación. 
+
+- **Notificación por correo (#35):**  
+  Tras confirmar una compra o reserva, el modal de éxito informa al usuario que en unos minutos recibirá un correo con el resumen de la operación en su dirección registrada. Al igual que con el numero de telefono se decidio manejar el caso con un solo email encargado del envío. En este caso el email se configura en el backend (application.properties o .env)
 
 ---

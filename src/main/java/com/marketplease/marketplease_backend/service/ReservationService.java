@@ -5,6 +5,8 @@ import com.marketplease.marketplease_backend.domain.Reservation;
 import com.marketplease.marketplease_backend.domain.User;
 import com.marketplease.marketplease_backend.dto.ProductDtos.DateRangeRes;
 import com.marketplease.marketplease_backend.dto.ProductDtos.ProductAvailabilityRes;
+import com.marketplease.marketplease_backend.dto.ReceiptEmail;
+import com.marketplease.marketplease_backend.dto.ReceiptEmail.DetailRow;
 import com.marketplease.marketplease_backend.dto.ReservationDtos.ReservationCreateReq;
 import com.marketplease.marketplease_backend.dto.ReservationDtos.ReservationRes;
 import com.marketplease.marketplease_backend.enums.ProductType;
@@ -17,8 +19,10 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class ReservationService {
@@ -28,16 +32,23 @@ public class ReservationService {
             ReservationStatus.BOOKED
     );
 
+    // "04 de junio de 2026", igual que el formatDate() del front (es-AR).
+    private static final DateTimeFormatter PERIOD_FMT =
+            DateTimeFormatter.ofPattern("d 'de' MMMM 'de' yyyy", Locale.forLanguageTag("es-AR"));
+
     private final ReservationRepository reservationRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final ReceiptMailService receiptMailService;
 
     public ReservationService(ReservationRepository reservationRepository,
                               ProductRepository productRepository,
-                              UserRepository userRepository) {
+                              UserRepository userRepository,
+                              ReceiptMailService receiptMailService) {
         this.reservationRepository = reservationRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
+        this.receiptMailService = receiptMailService;
     }
 
     public ProductAvailabilityRes getProductAvailability(Long productId, LocalDate from, LocalDate to) {
@@ -100,6 +111,22 @@ public class ReservationService {
         reservation.setStatus(ReservationStatus.BOOKED);
 
         Reservation saved = reservationRepository.save(reservation);
+
+        // Comprobante por correo (asincrono: no bloquea ni rompe la reserva si falla).
+        String firstImage = product.getImages().isEmpty() ? null : product.getImages().get(0).getUrl();
+        String periodo = PERIOD_FMT.format(saved.getDateFrom()) + " → " + PERIOD_FMT.format(saved.getDateTo());
+        receiptMailService.sendReceipt(new ReceiptEmail(
+                user.getEmail(),
+                user.getFirstName() + " " + user.getLastName(),
+                saved.getId(),
+                "Reserva",
+                saved.getStatus().name(),
+                product.getName(),
+                firstImage,
+                List.of(new DetailRow("Periodo", periodo)),
+                saved.getCreatedAt()
+        ));
+
         return toRes(saved);
     }
 

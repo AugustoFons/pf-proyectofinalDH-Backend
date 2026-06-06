@@ -12,7 +12,7 @@ Este repositorio corresponde al backend del proyecto.
 - Maven
 
 ## Documentación
-La documentación correspondiente al Sprint 1 y 2 se encuentra en la carpeta `/docs`:
+La documentación correspondiente a los Sprints se encuentra en la carpeta `/docs`:
 - Bitácora de los sprints
 - Identidad de marca
 - Plan de testing
@@ -51,6 +51,10 @@ Nota: el esquema de tablas se genera y actualiza automáticamente al iniciar la 
   - Email: admin@marketplease.local
   - Password inicial: password
 
+- Al iniciar la app, tambien se inicializa un telefono asociado al Rol Administrador que se expone para que el front lo llame al dirigir a una conversación via Whatsapp. Por defecto la db se inicializa con mi número personal.
+
+- Para que sea funcional la capacidad de envio de email al confirmar una compra/reserva se debe configurar el correo y la contraseña de aplicación asociada, en application.properties se ejemplifica.
+
 ## Ejecución
 mvn spring-boot:run
 
@@ -63,8 +67,10 @@ Repositorio Frontend: https://github.com/AugustoFons/pf-proyectofinalDH-Front
 
 A continuación se deja el enlace a un breve video donde se muestra como se inicializan las tablas por primera vez, la inserción de datos y una vista general de las pantallas. Es necesario previamente haber realizado los pasos previos de instalación mencionados en cada repositorio.
 
-https://drive.google.com/file/d/1kD3_EGqhuRWitlL_h6k0wXQv9cJ-cd5t/view?usp=sharing
-(El video se realizo en el Sprint 1)
+https://drive.google.com/file/d/1kD3_EGqhuRWitlL_h6k0wXQv9cJ-cd5t/view?usp=sharing (El video se realizo en el Sprint 1)
 
 ---
 
+Video review general luego del Sprint 4:
+
+https://drive.google.com/file/d/1rtqfdn01x48OiI_Gz0xPu9Yxu_3pCDkg/view?usp=sharing

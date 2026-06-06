@@ -5,6 +5,8 @@ import com.marketplease.marketplease_backend.domain.Purchase;
 import com.marketplease.marketplease_backend.domain.User;
 import com.marketplease.marketplease_backend.dto.PurchaseDtos.PurchaseCreateReq;
 import com.marketplease.marketplease_backend.dto.PurchaseDtos.PurchaseRes;
+import com.marketplease.marketplease_backend.dto.ReceiptEmail;
+import com.marketplease.marketplease_backend.dto.ReceiptEmail.DetailRow;
 import com.marketplease.marketplease_backend.enums.ProductType;
 import com.marketplease.marketplease_backend.enums.PurchaseStatus;
 import com.marketplease.marketplease_backend.repositories.ProductRepository;
@@ -13,6 +15,7 @@ import com.marketplease.marketplease_backend.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.math.RoundingMode;
 import java.util.List;
 
 @Service
@@ -21,13 +24,16 @@ public class PurchaseService {
     private final PurchaseRepository purchaseRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final ReceiptMailService receiptMailService;
 
     public PurchaseService(PurchaseRepository purchaseRepository,
                            ProductRepository productRepository,
-                           UserRepository userRepository) {
+                           UserRepository userRepository,
+                           ReceiptMailService receiptMailService) {
         this.purchaseRepository = purchaseRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
+        this.receiptMailService = receiptMailService;
     }
 
     public PurchaseRes createPurchase(String email, PurchaseCreateReq req) {
@@ -49,6 +55,25 @@ public class PurchaseService {
         purchase.setStatus(PurchaseStatus.CONFIRMED);
 
         Purchase saved = purchaseRepository.save(purchase);
+
+        // Comprobante por correo (asincrono: no bloquea ni rompe la compra si falla).
+        String firstImage = product.getImages().isEmpty() ? null : product.getImages().get(0).getUrl();
+        receiptMailService.sendReceipt(new ReceiptEmail(
+                user.getEmail(),
+                user.getFirstName() + " " + user.getLastName(),
+                saved.getId(),
+                "Compra",
+                saved.getStatus().name(),
+                product.getName(),
+                firstImage,
+                List.of(
+                        new DetailRow("Cantidad", String.valueOf(saved.getQuantity())),
+                        new DetailRow("Total", "$" + saved.getTotalPrice()
+                                .setScale(2, RoundingMode.HALF_UP).toPlainString())
+                ),
+                saved.getCreatedAt()
+        ));
+
         return toRes(saved);
     }
 
